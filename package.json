@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/WillySchu/ping-pong-rating#readme",
   "dependencies": {
+    "body-parser": "^1.15.0",
     "ejs": "^2.4.1",
     "express": "^4.13.4",
     "rhc": "0.0.1"
