@@ -1,8 +1,13 @@
-var express = require(express);
-var app = express();
+const express = require('express');
+const app = express();
+const port = process.env.PORT || 8000;
 
-app.set('view-engine', 'ejs');
+app.set('view engine', 'ejs');
 
-app.get('/', (req, res) = > {
+app.get('/', (req, res) => {
   res.render('index');
-})
+});
+
+app.listen(port, () => {
+  console.log(`listening on port: ${port}`);
+});
