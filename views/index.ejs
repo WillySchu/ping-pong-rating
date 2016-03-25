@@ -19,17 +19,66 @@
   </head>
   <body>
     <div class="container-fluid">
-      <form>
-        <div class="form-group">
-          <label for="winner">Winner</label>
-          <input type="text" class="form-control" id="winner" placeholder="Winner">
+      <div class="row">
+        <div class="col-md-4">
+          <form>
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" class="form-control" id="name" placeholder="Bob">
+              <label for="skill">Skill-level</label>
+              <select class="form-control" name="skill">
+                <option value="expert">Expert</option>
+                <option value="intermediate" selected>Intermediate</option>
+                <option value="beginner">Beginner</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-default">New Player</button>
+          </form>
         </div>
-        <div class="form-group">
-          <label for="loser">Loser</label>
-          <input type="text" class="form-control" id="loser" placeholder="Loser">
+        <div class="col-md-4">
+          <form>
+            <div class="form-group">
+              <label for="winner">Winner</label>
+              <select class="form-control" id="winner" class="winner" name="winner">
+                <option value="henry">henry</option>
+                <option value="will" selected>will</option>
+                <option value="bob">bob</option>
+              </select>
+            </div>
+            <label for="loser">Loser</label>
+            <select class="form-control" id="loser" class="loser" name="loser">
+              <option value="henry" selected>henry</option>
+              <option value="will">will</option>
+              <option value="bob">bob</option>
+            </select>
+            <button type="submit" class="btn btn-default">Submit</button>
+          </form>
         </div>
-        <button type="submit" class="btn btn-default">Submit</button>
-      </form>
+        <div class="col-md-4">
+          <table class="table table-hover">
+            <tr>
+              <tr>
+                <th>player</th>
+                <th>win/loss ratio</th>
+                <th>rating</th>
+              </tr>
+              <td>henry</td>
+              <td>.830</td>
+              <td>1300</td>
+            </tr>
+            <tr>
+              <td>bob</td>
+              <td>.530</td>
+              <td>1193</td>
+            </tr>
+            <tr>
+              <td>will</td>
+              <td>.830</td>
+              <td>945</td>
+            </tr>
+          </table>
+        </div>
+      </div>
     </div>
     <script src="app.js"></script>
   </body>
