@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const bp = require('body-parser');
 const fs = require('fs');
+const Firebase = require('firebase');
+const database = new Firebase('https://pingpongratings.firebaseio.com');
 const path = require('path');
 const dbPath = path.join(__dirname, 'db.json');
 const port = process.env.OPENSHIFT_NODEJS_PORT || 8000;
@@ -16,20 +18,20 @@ app.get('/', (req, res) => {
 });
 
 app.post('/postGame/', (req, res) => {
-  const promise = readFile();
-  promise.then((data) => {
-    data[1].games.push(req.body);
-    fs.writeFile(dbPath, JSON.stringify(data), (writeErr) => {
-      if(writeErr) throw writeErr;
-    });
+  //const promise = readFile();
+  //promise.then((data) => {
+    database.push(req.body);
+    // fs.writeFile(dbPath, JSON.stringify(data), (writeErr) => {
+    //   if(writeErr) throw writeErr;
+    // });
     res.send('done');
-  });
+  //});
 });
 
 app.post('/postPlayer/', (req, res) => {
   const promise = readFile();
   promise.then((data) => {
-    
+
   });
 });
 
