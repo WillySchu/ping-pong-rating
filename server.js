@@ -19,9 +19,12 @@ app.get('/', (req, res) => {
 app.post('/postGame/', (req, res) => {
     knex('players').select().where({name: req.body.winner}).orWhere({name: req.body.loser}).then((data) => {
       console.log(data);
-      if (data[0].ranking > data[1].ranking) {
-        
-      }
+
+      const name1 = data[0].name;
+      const expOutcome1 = expOutcome(data[0].rating, data[1].rating);
+      const newRating1 = newRating(data[0].rating, da)
+
+      knex('players').update()
       res.send('done');
     });
 });
@@ -52,6 +55,6 @@ function expOutcome(ratingA, ratingB) {
   return 1 / (1 + Math.pow(10, (ratingA - ratingB) / 400))
 };
 
-function newRanking(oldRanking, eOutcome, aOutcome, kConstant) {
+function newRating(oldRating, eOutcome, aOutcome, kConstant) {
   return oldRanking + kConstant * (aOutcome - eOutcome);
 }
