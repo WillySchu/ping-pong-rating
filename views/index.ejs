@@ -21,12 +21,12 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-4">
-          <form>
+          <form id="newplayer">
             <div class="form-group">
               <label for="name">Name</label>
               <input type="text" class="form-control" id="name" placeholder="Bob">
               <label for="skill">Skill-level</label>
-              <select class="form-control" name="skill">
+              <select class="form-control" name="skill" id="skill">
                 <option value="expert">Expert</option>
                 <option value="intermediate" selected>Intermediate</option>
                 <option value="beginner">Beginner</option>
@@ -36,7 +36,7 @@
           </form>
         </div>
         <div class="col-md-4">
-          <form>
+          <form id="game">
             <div class="form-group">
               <label for="winner">Winner</label>
               <select class="form-control" id="winner" class="winner" name="winner">

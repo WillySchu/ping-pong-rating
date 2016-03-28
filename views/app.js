@@ -1,16 +1,28 @@
-const database = new Firebase('https://pingpongratings.firebaseio.com');
+//const database = new Firebase('https://pingpongratings.firebaseio.com');
+$('#newplayer').on('submit', (event) => {
+  event.preventDefault();
+  const player = $('#name');
+  const skill = $('#skill');
+  const data = {player: player, skill: skill}
 
-$('form').on('submit', (event) => {
+  $.ajax({
+    type: 'POST',
+    url: 'http://0.0.0.0:8000/postPlayer/',
+    data: JSON.stringify(data),
+    contentType: 'application/json'
+  });
+});
+
+$('#game').on('submit', (event) => {
   event.preventDefault();
   const winner = $('#winner').val();
   const loser = $('#loser').val();
   const data = {winner: winner, loser: loser};
-  database.push({winner: winner, loser: loser});
-  console.log(JSON.stringify(data));
+  console.log(data);
 
   $.ajax({
-    type: "POST",
-    url: "http://0.0.0.0:8000/post/",
+    type: 'POST',
+    url: 'http://0.0.0.0:8000/postGame/',
     data: JSON.stringify(data),
     contentType: 'application/json'
   });
