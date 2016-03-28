@@ -32,11 +32,13 @@ app.post('/postGame/', (req, res) => {
 
     const name1 = data[0].name;
     const expOutcome1 = expOutcome(data[0].rating, data[1].rating);
-    const newRating1 = newRating(data[0].rating, expOutcome1, 0, kConst);
+    const newRating1 = Math.floor(newRating(data[0].rating, expOutcome1, 0, kConst));
+    console.log(newRating1);
 
     const name2 = data[1].name;
     const expOutcome2 = expOutcome(data[1].rating, data[0].rating);
-    const newRating2 = newRating(data[1].rating, expOutcome2, 1, kConst);
+    const newRating2 = Math.floor(newRating(data[1].rating, expOutcome2, 1, kConst));
+    console.log(newRating2);
 
     knex('players').where({name: name1}).update({rating: newRating1}).then((data) => {
 
@@ -61,17 +63,6 @@ app.post('/postPlayer/', (req, res) => {
 app.listen(port, ipAdress, () => {
   console.log(`listening on ${ipAdress}, port ${port}`);
 });
-
-function readFile() {
-  const myPromise = new Promise(function(resolve, reject) {
-    fs.readFile(dbPath, 'utf8', (err, data) => {
-      if (err) return reject(err);
-
-      resolve(JSON.parse(data));
-    });
-  });
-  return myPromise;
-}
 
 function expOutcome(ratingA, ratingB) {
   return 1 / (1 + Math.pow(10, (parseInt(ratingA, 10) - parseInt(ratingB, 10)) / 400))
