@@ -6,7 +6,8 @@ const knex = require('./db/knex');
 const path = require('path');
 const dbPath = path.join(__dirname, 'db.json');
 const port = process.env.OPENSHIFT_NODEJS_PORT || 8000;
-const ipAdress = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0'
+const ipAdress = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
+const kConst = 20;
 
 app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/views'))
@@ -16,18 +17,36 @@ app.get('/', (req, res) => {
   res.render('index');
 });
 
+app.get('/load/', (req, res) => {
+  knex('players').select().then((data) => {
+    res.send(data);
+  })
+})
+
 app.post('/postGame/', (req, res) => {
-    knex('players').select().where({name: req.body.winner}).orWhere({name: req.body.loser}).then((data) => {
-      console.log(data);
+  knex('players').select().where({name: req.body.winner}).orWhere({name: req.body.loser}).then((data) => {
 
-      const name1 = data[0].name;
-      const expOutcome1 = expOutcome(data[0].rating, data[1].rating);
-      const newRating1 = newRating(data[0].rating, da)
+    if (req.body.winner === data[0].name) {
+      data.push(data.shift());
+    }
 
-      knex('players').update()
-      knex('players').select().
-      res.send('done');
+    const name1 = data[0].name;
+    const expOutcome1 = expOutcome(data[0].rating, data[1].rating);
+    const newRating1 = newRating(data[0].rating, expOutcome1, 0, kConst);
+
+    const name2 = data[1].name;
+    const expOutcome2 = expOutcome(data[1].rating, data[0].rating);
+    const newRating2 = newRating(data[1].rating, expOutcome2, 1, kConst);
+
+    knex('players').where({name: name1}).update({rating: newRating1}).then((data) => {
+
     });
+    knex('players').where({name: name2}).update({rating: newRating2}).then((data) => {
+      knex('players').select().orderBy('rating', 'desc').then((data) => {
+        res.send(data);
+      });
+    });
+  });
 });
 
 app.post('/postPlayer/', (req, res) => {
@@ -55,9 +74,9 @@ function readFile() {
 }
 
 function expOutcome(ratingA, ratingB) {
-  return 1 / (1 + Math.pow(10, (ratingA - ratingB) / 400))
+  return 1 / (1 + Math.pow(10, (parseInt(ratingA, 10) - parseInt(ratingB, 10)) / 400))
 };
 
 function newRating(oldRating, eOutcome, aOutcome, kConstant) {
-  return oldRanking + kConstant * (aOutcome - eOutcome);
+  return parseInt(oldRating, 10) + kConstant * (aOutcome - parseFloat(eOutcome));
 }
