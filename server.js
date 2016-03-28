@@ -13,9 +13,8 @@ app.get('/', (req, res) => {
 });
 
 app.post('/post/', (req, res) => {
-  console.log('hello');
   console.log(req.body);
-  res.send('hello');
+  res.send('done');
 })
 
 app.listen(port, ipAdress, () => {

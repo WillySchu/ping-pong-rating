@@ -1,15 +1,18 @@
 const database = new Firebase('https://pingpongratings.firebaseio.com');
 
-$('form').on('submit', () => {
+$('form').on('submit', (event) => {
+  event.preventDefault();
   const winner = $('#winner').val();
   const loser = $('#loser').val();
   const data = {winner: winner, loser: loser};
   database.push({winner: winner, loser: loser});
+  console.log(JSON.stringify(data));
 
   $.ajax({
     type: "POST",
     url: "http://0.0.0.0:8000/post/",
-    data: data
+    data: JSON.stringify(data),
+    contentType: 'application/json'
   });
 });
 
