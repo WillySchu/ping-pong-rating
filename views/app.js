@@ -1,4 +1,3 @@
-//const database = new Firebase('https://pingpongratings.firebaseio.com');
 $('#newplayer').on('submit', (event) => {
   event.preventDefault();
   const player = $('#name').val();
@@ -27,11 +26,3 @@ $('#game').on('submit', (event) => {
     contentType: 'application/json'
   });
 });
-
-function expOutcome(ratingA, ratingB) {
-  return 1 / (1 + Math.pow(10, (ratingA - ratingB) / 400))
-};
-
-function newRanking(oldRanking, eOutcome, aOutcome, kConstant) {
-  return oldRanking + kConstant * (aOutcome - eOutcome);
-}

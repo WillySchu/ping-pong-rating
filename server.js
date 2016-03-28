@@ -2,7 +2,6 @@ const express = require('express');
 const app = express();
 const bp = require('body-parser');
 const fs = require('fs');
-const Firebase = require('firebase');
 const knex = require('./db/knex');
 const path = require('path');
 const dbPath = path.join(__dirname, 'db.json');
@@ -18,9 +17,13 @@ app.get('/', (req, res) => {
 });
 
 app.post('/postGame/', (req, res) => {
-    knex('players').select(['ranking']).where
-    console.log(req.body);
-    res.send('done');
+    knex('players').select().where({name: req.body.winner}).orWhere({name: req.body.loser}).then((data) => {
+      console.log(data);
+      if (data[0].ranking > data[1].ranking) {
+        
+      }
+      res.send('done');
+    });
 });
 
 app.post('/postPlayer/', (req, res) => {
@@ -43,4 +46,12 @@ function readFile() {
     });
   });
   return myPromise;
+}
+
+function expOutcome(ratingA, ratingB) {
+  return 1 / (1 + Math.pow(10, (ratingA - ratingB) / 400))
+};
+
+function newRanking(oldRanking, eOutcome, aOutcome, kConstant) {
+  return oldRanking + kConstant * (aOutcome - eOutcome);
 }
