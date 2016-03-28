@@ -25,6 +25,7 @@ app.post('/postGame/', (req, res) => {
       const newRating1 = newRating(data[0].rating, da)
 
       knex('players').update()
+      knex('players').select().
       res.send('done');
     });
 });
@@ -32,7 +33,9 @@ app.post('/postGame/', (req, res) => {
 app.post('/postPlayer/', (req, res) => {
   knex('players').insert({name: req.body.player, ranking: 1200}).then((data) => {
     console.log(req.body.player);
-    res.send('done');
+    knex('players').select().then((data) => {
+      res.send(data);
+    });
   });
 });
 
