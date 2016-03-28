@@ -3,7 +3,7 @@ const app = express();
 const bp = require('body-parser');
 const fs = require('fs');
 const Firebase = require('firebase');
-const database = new Firebase('https://pingpongratings.firebaseio.com');
+const knex = require('./db/knex');
 const path = require('path');
 const dbPath = path.join(__dirname, 'db.json');
 const port = process.env.OPENSHIFT_NODEJS_PORT || 8000;
@@ -18,20 +18,15 @@ app.get('/', (req, res) => {
 });
 
 app.post('/postGame/', (req, res) => {
-  //const promise = readFile();
-  //promise.then((data) => {
-    database.push(req.body);
-    // fs.writeFile(dbPath, JSON.stringify(data), (writeErr) => {
-    //   if(writeErr) throw writeErr;
-    // });
+    knex('players').select(['ranking']).where
+    console.log(req.body);
     res.send('done');
-  //});
 });
 
 app.post('/postPlayer/', (req, res) => {
-  const promise = readFile();
-  promise.then((data) => {
-
+  knex('players').insert({name: req.body.player, ranking: 1200}).then((data) => {
+    console.log(req.body.player);
+    res.send('done');
   });
 });
 

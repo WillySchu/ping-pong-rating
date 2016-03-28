@@ -1,8 +1,8 @@
 //const database = new Firebase('https://pingpongratings.firebaseio.com');
 $('#newplayer').on('submit', (event) => {
   event.preventDefault();
-  const player = $('#name');
-  const skill = $('#skill');
+  const player = $('#name').val();
+  const skill = $('#skill').val();
   const data = {player: player, skill: skill}
 
   $.ajax({
