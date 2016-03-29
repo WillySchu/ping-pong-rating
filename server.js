@@ -70,4 +70,4 @@ function expOutcome(ratingA, ratingB) {
 
 function newRating(oldRating, eOutcome, aOutcome, kConstant) {
   return parseInt(oldRating, 10) + kConstant * (aOutcome - parseFloat(eOutcome));
-}
+};
