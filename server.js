@@ -68,11 +68,12 @@ app.post('/postGame/', (req, res) => {
 });
 
 app.post('/postPlayer/', (req, res) => {
-  knex('players').select('name').where({name: req.body.player}).then((data) => {
-    if (data[0] && data[0].name === req.body.player) {
+  const player = req.body.player.toLowerCase();
+  knex('players').select('name').where({name: player}).then((data) => {
+    if (data[0] && data[0].name === player) {
       res.status(400).send('Player already exists');
     } else {
-      knex('players').insert({name: req.body.player, rating: 1200}).then((data) => {
+      knex('players').insert({name: player, rating: 1200}).then((data) => {
         knex('players').select().orderBy('rating', 'desc').then((data) => {
           res.status(200).send(data);
         });
