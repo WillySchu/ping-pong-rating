@@ -35,12 +35,10 @@ app.post('/postGame/', (req, res) => {
     const name1 = data[0].name;
     const expOutcome1 = expOutcome(data[0].rating, data[1].rating);
     const newRating1 = Math.floor(newRating(data[0].rating, expOutcome1, 1, kConst));
-    console.log(newRating1);
 
     const name2 = data[1].name;
     const expOutcome2 = expOutcome(data[1].rating, data[0].rating);
     const newRating2 = Math.floor(newRating(data[1].rating, expOutcome2, 0, kConst));
-    console.log(newRating2);
 
     knex('players').where({name: name1}).update({rating: newRating1}).then((data) => {
 
