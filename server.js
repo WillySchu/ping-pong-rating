@@ -20,8 +20,8 @@ app.get('/', (req, res) => {
 app.get('/load/', (req, res) => {
   knex('players').select().orderBy('rating', 'desc').then((data) => {
     res.send(data);
-  })
-})
+  });
+});
 
 app.post('/postGame/', (req, res) => {
   knex('players').select().where({name: req.body.winner}).orWhere({name: req.body.loser}).then((data) => {
