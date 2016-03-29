@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const app = express();
 const bp = require('body-parser');
@@ -26,18 +28,18 @@ app.get('/load/', (req, res) => {
 app.post('/postGame/', (req, res) => {
   knex('players').select().where({name: req.body.winner}).orWhere({name: req.body.loser}).then((data) => {
 
-    if (req.body.winner === data[0].name) {
+    if (req.body.winner === data[1].name) {
       data.push(data.shift());
     }
 
     const name1 = data[0].name;
     const expOutcome1 = expOutcome(data[0].rating, data[1].rating);
-    const newRating1 = Math.floor(newRating(data[0].rating, expOutcome1, 0, kConst));
+    const newRating1 = Math.floor(newRating(data[0].rating, expOutcome1, 1, kConst));
     console.log(newRating1);
 
     const name2 = data[1].name;
     const expOutcome2 = expOutcome(data[1].rating, data[0].rating);
-    const newRating2 = Math.floor(newRating(data[1].rating, expOutcome2, 1, kConst));
+    const newRating2 = Math.floor(newRating(data[1].rating, expOutcome2, 0, kConst));
     console.log(newRating2);
 
     knex('players').where({name: name1}).update({rating: newRating1}).then((data) => {
@@ -46,6 +48,20 @@ app.post('/postGame/', (req, res) => {
     knex('players').where({name: name2}).update({rating: newRating2}).then((data) => {
       knex('players').select().orderBy('rating', 'desc').then((data) => {
         res.send(data);
+      });
+      knex('players').select(['id', 'name']).where({name: name1}).orWhere({name: name2}).then((data) => {
+        let winner;
+        let loser;
+        if (data[0].name === name1) {
+          winner = data[0].id;
+          loser = data[1].id;
+        } else {
+          winner = data[1].id;
+          loser = data[0].id;
+        }
+        knex('games').insert({winner: winner, loser: loser}).then((data) => {
+
+        });
       });
     });
   });
