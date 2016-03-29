@@ -3,6 +3,7 @@ $.ajax({
   url: 'http://0.0.0.0:8000/load/',
   success: (data) => {
     appendSelect(data);
+    appendTable(data);
   }
 });
 
@@ -19,16 +20,17 @@ $('#newplayer').on('submit', (event) => {
     contentType: 'application/json',
     success: (data) => {
       appendSelect(data);
+      appendTable(data);
     }
   });
 });
 
 function appendSelect(data) {
+  $('.winner').empty();
+  $('.loser').empty();
   for (var i = 0; i < data.length; i++) {
-        $('.winner').append(
-          $('<option></option>').val(data[i].name).html(data[i].name))
-        $('.loser').append(
-          $('<option></option>').val(data[i].name).html(data[i].name))
+        $('.winner').append($('<option></option>').val(data[i].name).html(data[i].name));
+        $('.loser').append($('<option></option>').val(data[i].name).html(data[i].name));
   }
 }
 
@@ -37,7 +39,6 @@ $('#game').on('submit', (event) => {
   const winner = $('#winner').val();
   const loser = $('#loser').val();
   const data = {winner: winner, loser: loser};
-  console.log(data.name);
 
   $.ajax({
     type: 'POST',
@@ -45,7 +46,20 @@ $('#game').on('submit', (event) => {
     data: JSON.stringify(data),
     contentType: 'application/json',
     success: (data) => {
-      console.log(data);
+      appendTable(data);
     }
   });
 });
+
+function appendTable(data) {
+  $('.ranking-table').empty();
+  $('.ranking-table').append(
+    '<tr><th>player</th><th>win/loss ratio</th><th>rating</th></tr>');
+
+  for (var i = 0; i < data.length; i++) {
+    var $tr = $('<tr></tr>').append($('<td></td>').html(data[i].name));
+    $tr.append($('<td></td>').html('.85'));
+    $tr.append($('<td></td>').html(data[i].rating));
+      $('.ranking-table').append($tr);
+  }
+}

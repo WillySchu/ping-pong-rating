@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/load/', (req, res) => {
-  knex('players').select().then((data) => {
+  knex('players').select().orderBy('rating', 'desc').then((data) => {
     res.send(data);
   })
 })
@@ -52,9 +52,9 @@ app.post('/postGame/', (req, res) => {
 });
 
 app.post('/postPlayer/', (req, res) => {
-  knex('players').insert({name: req.body.player, ranking: 1200}).then((data) => {
+  knex('players').insert({name: req.body.player, rating: 1200}).then((data) => {
     console.log(req.body.player);
-    knex('players').select().then((data) => {
+    knex('players').select().orderBy('rating', 'desc').then((data) => {
       res.send(data);
     });
   });
