@@ -21,7 +21,7 @@ app.get('/', (req, res) => {
 
 app.get('/load/', (req, res) => {
   knex('players').select().orderBy('rating', 'desc').then((data) => {
-    res.send(data);
+    res.status(200).send(data);
   });
 });
 
@@ -47,7 +47,7 @@ app.post('/postGame/', (req, res) => {
     });
     knex('players').where({name: name2}).update({rating: newRating2}).then((data) => {
       knex('players').select().orderBy('rating', 'desc').then((data) => {
-        res.send(data);
+        res.status(200).send(data);
       });
       knex('players').select(['id', 'name']).where({name: name1}).orWhere({name: name2}).then((data) => {
         let winner;
@@ -68,11 +68,16 @@ app.post('/postGame/', (req, res) => {
 });
 
 app.post('/postPlayer/', (req, res) => {
-  knex('players').insert({name: req.body.player, rating: 1200}).then((data) => {
-    console.log(req.body.player);
-    knex('players').select().orderBy('rating', 'desc').then((data) => {
-      res.send(data);
-    });
+  knex('players').select('name').where({name: req.body.player}).then((data) => {
+    if (data[0] && data[0].name === req.body.player) {
+      res.status(400).send('Player already exists');
+    } else {
+      knex('players').insert({name: req.body.player, rating: 1200}).then((data) => {
+        knex('players').select().orderBy('rating', 'desc').then((data) => {
+          res.status(200).send(data);
+        });
+      });
+    }
   });
 });
 
