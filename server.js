@@ -5,8 +5,8 @@ const fs = require('fs');
 const knex = require('./db/knex');
 const path = require('path');
 const dbPath = path.join(__dirname, 'db.json');
-const port = process.env.OPENSHIFT_NODEJS_PORT || 8000;
-const ipAdress = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
+const port = process.env.PORT || 8000;
+const ipAdress = process.env.IP || '0.0.0.0';
 const kConst = 20;
 
 app.set('view engine', 'ejs');
