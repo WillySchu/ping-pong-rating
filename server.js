@@ -32,36 +32,42 @@ app.post('/postGame/', (req, res) => {
       data.push(data.shift());
     }
 
-    const name1 = data[0].name;
-    const expOutcome1 = expOutcome(data[0].rating, data[1].rating);
-    const newRating1 = Math.floor(newRating(data[0].rating, expOutcome1, 1, kConst));
-
-    const name2 = data[1].name;
-    const expOutcome2 = expOutcome(data[1].rating, data[0].rating);
-    const newRating2 = Math.floor(newRating(data[1].rating, expOutcome2, 0, kConst));
-
-    knex('players').where({name: name1}).update({rating: newRating1}).then((data) => {
-
+    updateRatings(data[0].name, data[0].rating, data[1].name, data[1].rating).then((data) => {
+      res.status(200).send(data);
     });
-    knex('players').where({name: name2}).update({rating: newRating2}).then((data) => {
-      knex('players').select().orderBy('rating', 'desc').then((data) => {
-        res.status(200).send(data);
-      });
-      knex('players').select(['id', 'name']).where({name: name1}).orWhere({name: name2}).then((data) => {
-        let winner;
-        let loser;
-        if (data[0].name === name1) {
-          winner = data[0].id;
-          loser = data[1].id;
-        } else {
-          winner = data[1].id;
-          loser = data[0].id;
-        }
-        knex('games').insert({winner: winner, loser: loser}).then((data) => {
 
-        });
-      });
-    });
+    logGame(data[0].name, data[1].name);
+
+  //   const name1 = data[0].name;
+  //   const expOutcome1 = expOutcome(data[0].rating, data[1].rating);
+  //   const newRating1 = Math.floor(newRating(data[0].rating, expOutcome1, 1, kConst));
+  //
+  //   const name2 = data[1].name;
+  //   const expOutcome2 = expOutcome(data[1].rating, data[0].rating);
+  //   const newRating2 = Math.floor(newRating(data[1].rating, expOutcome2, 0, kConst));
+  //
+  //   knex('players').where({name: name1}).update({rating: newRating1}).then((data) => {
+  //
+  //   });
+  //   knex('players').where({name: name2}).update({rating: newRating2}).then((data) => {
+  //     knex('players').select().orderBy('rating', 'desc').then((data) => {
+  //       res.status(200).send(data);
+  //     });
+  //     knex('players').select(['id', 'name']).where({name: name1}).orWhere({name: name2}).then((data) => {
+  //       let winner;
+  //       let loser;
+  //       if (data[0].name === name1) {
+  //         winner = data[0].id;
+  //         loser = data[1].id;
+  //       } else {
+  //         winner = data[1].id;
+  //         loser = data[0].id;
+  //       }
+  //       knex('games').insert({winner: winner, loser: loser}).then((data) => {
+  //
+  //       });
+  //     });
+  //   });
   });
 });
 
@@ -89,5 +95,59 @@ function expOutcome(ratingA, ratingB) {
 };
 
 function newRating(oldRating, eOutcome, aOutcome, kConstant) {
-  return parseInt(oldRating, 10) + kConstant * (aOutcome - parseFloat(eOutcome));
+  return parseInt(parseInt(oldRating, 10) + kConstant * (aOutcome - parseFloat(eOutcome)), 10);
 };
+
+function wlRatio(playerID) {
+  'use strict';
+  let wins = 0;
+  let losses = 0;
+  const promise = new Promise((resolve, reject) => {
+    knex('games').select().where({winner: playerID}).orWhere({loser: playerID}).then((data) => {
+      for (var i = 0; i < data.length; i++) {
+        if (data[i].winner === playerID) {
+          wins += 1;
+        }
+        if (data[i].loser === playerID) {
+          losses += 1;
+        }
+      }
+      resolve(wins / losses);
+    });
+  })
+  return promise;
+}
+
+function updateRatings(winnerName, winnerRating, loserName, loserRating) {
+  const expWOut = expOutcome(winnerRating, loserRating);
+  const newWRat = newRating(winnerRating, expWOut, 1, kConst);
+  const expLOut = expOutcome(loserRating, winnerRating);
+  const newLRat = newRating(loserRating, expLOut, 0, kConst);
+  const promise = new Promise((resolve, reject) => {
+    knex('players').where({name: winnerName}).update({rating: newWRat}).then((wd) => {
+      knex('players').where({name: loserName}).update({rating: newLRat}).then((ld) => {
+        knex('players').select().orderBy('rating', 'desc').then((data) => {
+          resolve(data);
+        });
+      });
+    });
+  });
+  return promise;
+}
+
+function logGame(winner, loser, req, res) {
+  knex('players').select(['id', 'name']).where({name: winner}).orWhere({name: loser}).then((data) => {
+    let winnerID;
+    let loserID;
+    if (data[0].name === winner) {
+      winnerID = data[0].id;
+      loserID = data[1].id;
+    } else {
+      winnerID = data[1].id;
+      loserID = data[0].id;
+    }
+    knex('games').insert({winner: winnerID, loser: loserID}).then((data) => {
+
+    });
+  });
+}
