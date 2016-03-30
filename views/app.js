@@ -36,8 +36,8 @@ function appendSelect(data) {
 
 $('#game').on('submit', (event) => {
   event.preventDefault();
-  const winner = $('#winner').val();
-  const loser = $('#loser').val();
+  const winner = $('.winner').val();
+  const loser = $('.loser').val();
   const data = {winner: winner, loser: loser};
 
   $.ajax({
