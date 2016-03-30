@@ -8,7 +8,6 @@ const knex = require('./db/knex');
 const path = require('path');
 const dbPath = path.join(__dirname, 'db.json');
 const port = process.env.PORT || 8000;
-//const ipAddress = process.env.IP || '0.0.0.0';
 const kConst = 20;
 
 app.set('view engine', 'ejs');
@@ -37,37 +36,6 @@ app.post('/postGame/', (req, res) => {
     });
 
     logGame(data[0].name, data[1].name);
-
-  //   const name1 = data[0].name;
-  //   const expOutcome1 = expOutcome(data[0].rating, data[1].rating);
-  //   const newRating1 = Math.floor(newRating(data[0].rating, expOutcome1, 1, kConst));
-  //
-  //   const name2 = data[1].name;
-  //   const expOutcome2 = expOutcome(data[1].rating, data[0].rating);
-  //   const newRating2 = Math.floor(newRating(data[1].rating, expOutcome2, 0, kConst));
-  //
-  //   knex('players').where({name: name1}).update({rating: newRating1}).then((data) => {
-  //
-  //   });
-  //   knex('players').where({name: name2}).update({rating: newRating2}).then((data) => {
-  //     knex('players').select().orderBy('rating', 'desc').then((data) => {
-  //       res.status(200).send(data);
-  //     });
-  //     knex('players').select(['id', 'name']).where({name: name1}).orWhere({name: name2}).then((data) => {
-  //       let winner;
-  //       let loser;
-  //       if (data[0].name === name1) {
-  //         winner = data[0].id;
-  //         loser = data[1].id;
-  //       } else {
-  //         winner = data[1].id;
-  //         loser = data[0].id;
-  //       }
-  //       knex('games').insert({winner: winner, loser: loser}).then((data) => {
-  //
-  //       });
-  //     });
-  //   });
   });
 });
 
