@@ -41,17 +41,22 @@ app.post('/postGame/', (req, res) => {
 
 app.post('/postPlayer/', (req, res) => {
   const player = req.body.player.toLowerCase();
-  knex('players').select('name').where({name: player}).then((data) => {
-    if (data[0] && data[0].name === player) {
-      res.status(400).send('Player already exists');
-    } else {
-      knex('players').insert({name: player, rating: 1200}).then((data) => {
-        knex('players').select().orderBy('rating', 'desc').then((data) => {
-          res.status(200).send(data);
-        });
-      });
-    }
-  });
+  postPlayer(req.body.player.toLowerCase(), 1200).then((data) => {
+    res.status(200).send(data);
+  }).catch((err) => {
+    res.status(400).send(err);
+  })
+  // knex('players').select('name').where({name: player}).then((data) => {
+  //   if (data[0] && data[0].name === player) {
+  //     res.status(400).send('Player already exists');
+  //   } else {
+  //     knex('players').insert({name: player, rating: 1200}).then((data) => {
+  //       knex('players').select().orderBy('rating', 'desc').then((data) => {
+  //         res.status(200).send(data);
+  //       });
+  //     });
+  //   }
+  // });
 });
 
 app.listen(port, () => {
@@ -118,4 +123,21 @@ function logGame(winner, loser, req, res) {
 
     });
   });
+}
+
+function postPlayer(player, rating) {
+  const promise = new Promise((resolve, reject) => {
+    knex('players').select('name').where({name: player}).then((data) => {
+      if (data[0] && data[0].name === player) {
+        reject('Player already exists');
+      } else {
+        knex('players').insert({name: player, rating: rating}).then((data) => {
+          knex('players').select().orderBy('rating', 'desc').then((data) => {
+            resolve(data);
+          });
+        });
+      }
+    });
+  });
+  return promise;
 }
