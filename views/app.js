@@ -1,6 +1,6 @@
 $.ajax({
   type: 'GET',
-  url: 'http://0.0.0.0:8000/load/',
+  url: 'http://localhost:8000/load/',
   success: (data) => {
     appendSelect(data);
     appendTable(data);
