@@ -8,7 +8,7 @@ const knex = require('./db/knex');
 const path = require('path');
 const dbPath = path.join(__dirname, 'db.json');
 const port = process.env.PORT || 8000;
-const ipAddress = process.env.IP || '0.0.0.0';
+//const ipAddress = process.env.IP || '0.0.0.0';
 const kConst = 20;
 
 app.set('view engine', 'ejs');
@@ -86,8 +86,8 @@ app.post('/postPlayer/', (req, res) => {
   });
 });
 
-app.listen(port, ipAddress, () => {
-  console.log(`listening on ${ipAddress}, port ${port}`);
+app.listen(port, () => {
+  console.log(`listening on port ${port}`);
 });
 
 function expOutcome(ratingA, ratingB) {
