@@ -1,6 +1,6 @@
 $.ajax({
   type: 'GET',
-  url: 'http://0.0.0.0:8000/load/',
+  url: 'https://immense-meadow-39480.herokuapp.com/load/',
   success: (data) => {
     appendSelect(data);
     appendTable(data);
@@ -15,7 +15,7 @@ $('#newplayer').on('submit', (event) => {
 
   $.ajax({
     type: 'POST',
-    url: 'http://0.0.0.0:8000/postPlayer/',
+    url: 'https://immense-meadow-39480.herokuapp.com/postPlayer/',
     data: JSON.stringify(data),
     contentType: 'application/json',
     success: (data) => {
@@ -42,7 +42,7 @@ $('#game').on('submit', (event) => {
 
   $.ajax({
     type: 'POST',
-    url: 'http://0.0.0.0:8000/postGame/',
+    url: 'https://immense-meadow-39480.herokuapp.com/postGame/',
     data: JSON.stringify(data),
     contentType: 'application/json',
     success: (data) => {
