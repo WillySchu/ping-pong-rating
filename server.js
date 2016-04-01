@@ -6,12 +6,14 @@ const bp = require('body-parser');
 const fs = require('fs');
 const knex = require('./db/knex');
 const path = require('path');
+const logger = require('morgan');
 const dbPath = path.join(__dirname, 'db.json');
 const port = process.env.PORT || 8000;
 const kConst = 20;
 
 app.set('view engine', 'ejs');
-app.use(express.static(__dirname + '/views'))
+app.set('views', path.join(__dirname + '/views'));
+app.use(logger('dev'));
 app.use(bp.json());
 
 app.get('/', (req, res) => {
